@@ -2,21 +2,46 @@ const searchInput = document.getElementById('search-input');
 const resultArtist = document.getElementById("result-artist");
 const resultPlaylist = document.getElementById('result-playlists');
 
-function requestApi(searchTerm) {
-    const url = `http://localhost:3000/artists?name_like=${searchTerm}`
-    fetch(url)
-        .then((response) => response.json())
-        .then((result) => displayResults(result))
+async function requestApi(searchTerm) {
+    try {
+        console.log('Iniciando requisição à API...');
+        const response = await fetch(`http://localhost:5103/api/artists?name=${searchTerm}`);
+
+        console.log('Resposta da API recebida:', response);
+
+        const data = await response.json();
+        console.log('Dados JSON parseados:', data);
+
+        // Função para exibir os artistas na página
+        displayArtists(data.artists);
+    } catch (error) {
+        console.error('Erro ao buscar artistas:', error);
+    }
 }
 
-function displayResults(result) {
+
+// Função para exibir os artistas na página
+function displayArtists(artists) {
+    console.log('Exibindo artistas:', artists);
     resultPlaylist.classList.add("hidden")
+
     const artistName = document.getElementById('artist-name');
     const artistImage = document.getElementById('artist-img');
+    //const artistsList = document.getElementById('artistsList');
 
-    result.forEach(element => {
-        artistName.innerText = element.name;
-        artistImage.src = element.urlImg;
+
+    // artists.forEach(artist => {
+    //     const listItem = document.createElement('li');
+    //     listItem.textContent = `${artist.name} - ${artist.genre}`;
+    //     artistsList.appendChild(listItem);
+
+    //     artistName.innerText = artist.name;
+    //     artistImage.src = artist.urlImg;
+    // });
+
+    artists.forEach(item => {
+        artistName.innerText = item.name;
+        artistImage.src = item.urlImg;
     });
 
     resultArtist.classList.remove('hidden');
@@ -29,6 +54,6 @@ document.addEventListener('input', function () {
         resultArtist.classList.remove('hidden');
         return
     }
-    
+
     requestApi(searchTerm);
 })

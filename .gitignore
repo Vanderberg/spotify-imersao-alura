@@ -1,0 +1,12 @@
+# .gitignore
+
+# Node.js
+node_modules/
+
+# Arquivos de log
+logs
+*.log
+
+# Outros
+.DS_Store
+.vscode
